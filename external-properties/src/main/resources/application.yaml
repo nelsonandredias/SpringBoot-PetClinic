@@ -1,0 +1,7 @@
+
+polarising:
+  rabbitmq:
+    username: RabbitMQ username
+    password: RabbitMQ password
+    url: RabbitMQ url
+  

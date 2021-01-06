@@ -3,6 +3,7 @@ package com.polarising;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 
 import com.polarising.controllers.ConstructorInjectedController;
 import com.polarising.controllers.I18nController;
@@ -11,6 +12,7 @@ import com.polarising.controllers.PropertyInjectedController;
 import com.polarising.controllers.SetterInjectedController;
 
 @SpringBootApplication
+@ComponentScan(basePackages = {"com.polarisers.services","com.polarising"})
 public class DependencyInjectionApplication {
 
 	public static void main(String[] args) {

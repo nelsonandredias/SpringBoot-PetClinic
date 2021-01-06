@@ -2,10 +2,13 @@ package com.polarising.services.map;
 
 import java.util.Set;
 
-import com.polarising.models.Pet;
-import com.polarising.services.CrudService;
+import org.springframework.stereotype.Service;
 
-public class PetServiceMap extends AbstractMapService<Pet, Long> implements CrudService<Pet, Long>{
+import com.polarising.models.Pet;
+import com.polarising.services.PetService;
+
+@Service
+public class PetServiceMap extends AbstractMapService<Pet, Long> implements PetService{
 
 	@Override
 	public Set<Pet> findAll() {
@@ -20,9 +23,9 @@ public class PetServiceMap extends AbstractMapService<Pet, Long> implements Crud
 	}
 
 	@Override
-	public Pet save(Long id, Pet object) {
+	public Pet save(Pet object) {
 		
-		return super.save(id, object);
+		return super.save(object);
 	}
 
 	@Override

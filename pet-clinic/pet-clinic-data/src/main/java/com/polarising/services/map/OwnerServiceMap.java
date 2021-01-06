@@ -2,10 +2,13 @@ package com.polarising.services.map;
 
 import java.util.Set;
 
-import com.polarising.models.Owner;
-import com.polarising.services.CrudService;
+import org.springframework.stereotype.Service;
 
-public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements CrudService<Owner, Long> {
+import com.polarising.models.Owner;
+import com.polarising.services.OwnerService;
+
+@Service
+public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements OwnerService {
 
 	@Override
 	public Set<Owner> findAll() {
@@ -20,9 +23,9 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
 	}
 
 	@Override
-	public Owner save(Long id, Owner object) {
+	public Owner save(Owner object) {
 		
-		return super.save(id, object);
+		return super.save(object);
 	}
 
 	@Override
@@ -35,6 +38,12 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
 	public void delete(Owner object) {
 		
 		super.delete(object);
+	}
+
+	@Override
+	public Owner findByLastName(String lastName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
