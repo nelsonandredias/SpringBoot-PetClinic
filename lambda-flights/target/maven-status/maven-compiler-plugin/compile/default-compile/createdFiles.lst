@@ -1,0 +1,4 @@
+com\polarising\lambda\flight\dynamoDB\OperationsDynamoDBImpl.class
+com\polarising\lambda\flight\models\FlightItems.class
+com\polarising\lambda\flight\FlightDataHandler.class
+com\polarising\lambda\flight\dynamoDB\OperationsDynamoDBs.class

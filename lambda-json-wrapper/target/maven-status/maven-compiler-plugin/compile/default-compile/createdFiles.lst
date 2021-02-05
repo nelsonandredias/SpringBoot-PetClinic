@@ -1,0 +1,10 @@
+com\polarising\lambda\models\json\JSONResponse.class
+com\polarising\lambda\services\XMLManipulation.class
+com\polarising\lambda\Main$1.class
+com\polarising\lambda\models\soap\SOAPResponse.class
+com\polarising\lambda\services\FormatConverter.class
+com\polarising\lambda\ApiWrapperHandler.class
+com\polarising\lambda\models\json\JSONRequest.class
+com\polarising\lambda\Main.class
+com\polarising\lambda\models\json\FlightItems.class
+com\polarising\lambda\models\soap\SOAPRequest.class
