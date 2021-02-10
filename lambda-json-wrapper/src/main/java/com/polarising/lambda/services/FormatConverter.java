@@ -39,13 +39,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-
-import com.polarising.lambda.models.json.FlightItems;
-import com.polarising.lambda.models.json.JSONRequest;
+import com.polarising.lambda.models.FlightItems;
+import com.polarising.lambda.models.ReqDateRange;
 
 public class FormatConverter {
 	
-	public List<FlightItems> convertJsonToXml(JSONRequest JSONRequest) throws SOAPException {
+	public List<FlightItems> convertJsonToXml(ReqDateRange ReqDateRange) throws SOAPException {
 
 		String user = "INTERFACE_WBS_TIBCO";
 		String password = "e><change4all!";
@@ -61,8 +60,7 @@ public class FormatConverter {
 
 		try {
 
-			SOAPMessage soapResponse = callSoapWebService(soapEndpointUrl, "639", contentType, soapAction,
-					authHeaderValue);
+			SOAPMessage soapResponse = callSoapWebService(soapEndpointUrl, "639", contentType, soapAction, authHeaderValue, ReqDateRange);
 
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			soapResponse.writeTo(out);
@@ -80,7 +78,7 @@ public class FormatConverter {
 		return null;
 	}
 
-	public static void createSoapEnvelope(SOAPMessage soapMessage) throws SOAPException {
+	public static void createSoapEnvelope(SOAPMessage soapMessage, ReqDateRange ReqDateRange) throws SOAPException {
 		SOAPPart soapPart = soapMessage.getSOAPPart();
 
 		String myNamespace = "get";
@@ -96,36 +94,45 @@ public class FormatConverter {
 		 * "http://xmlns.oracle.com/orawsv/INTERFACE_OBJ/GET_FLIGHT_DATE_LIST">
 		 * <soapenv:Header/> <soapenv:Body> <get:GET_FLIGHT_DATE_LISTInput>
 		 * <get:P_AC_OWNER-VARCHAR2-IN>TUI</get:P_AC_OWNER-VARCHAR2-IN>
+		 * <get:P_AF_MODIFIED_SINCE-TIMESTAMP-IN>2021-01-24T17:45:00</get:P_AF_MODIFIED_SINCE-TIMESTAMP-IN>
 		 * <get:P_FLIGHT_FROM-TIMESTAMP-IN>2021-01-21</get:P_FLIGHT_FROM-TIMESTAMP-IN>
 		 * <get:P_FLIGHT_TO-TIMESTAMP-IN>2021-02-26</get:P_FLIGHT_TO-TIMESTAMP-IN>
 		 * <get:L_RETURN_STR-VARCHAR2-OUT/>
 		 * <get:P_FLIGHT_LIST-FLIGHT_LIST_DATE_OBJ-COUT/>
 		 * </get:GET_FLIGHT_DATE_LISTInput> </soapenv:Body> </soapenv:Envelope>
 		 */
-
+		
+		System.out.println("ac_owner: " + ReqDateRange.getAc_owner() + ", flight_from_timestamp: " + ReqDateRange.getFlight_from_timestamp() + ","
+				+ " flight_to_timestamp: " + ReqDateRange.getFlight_to_timestamp() + ", af_date_modified: " + ReqDateRange.getAf_date_modified());
+		
+		String getFlight_from_timestamp = ReqDateRange.getFlight_from_timestamp().substring(0, ReqDateRange.getFlight_from_timestamp().indexOf("T"));
+		String getFlight_to_timestamp = ReqDateRange.getFlight_to_timestamp().substring(0, ReqDateRange.getFlight_to_timestamp().indexOf("T"));
+		String getAf_date_modified = ReqDateRange.getAf_date_modified();
+		
 		// SOAP Body
 		SOAPBody soapBody = envelope.getBody();
 		SOAPElement soapBodyElem = soapBody.addChildElement("GET_FLIGHT_DATE_LISTInput", myNamespace);
 		SOAPElement soapBodyElem1 = soapBodyElem.addChildElement("P_AC_OWNER-VARCHAR2-IN", myNamespace);
-		soapBodyElem1.addTextNode("TUI");
-		SOAPElement soapBodyElem2 = soapBodyElem.addChildElement("P_FLIGHT_FROM-TIMESTAMP-IN", myNamespace);
-		soapBodyElem2.addTextNode("2021-01-21");
-		SOAPElement soapBodyElem3 = soapBodyElem.addChildElement("P_FLIGHT_TO-TIMESTAMP-IN", myNamespace);
-		soapBodyElem3.addTextNode("2021-02-26");
-		SOAPElement soapBodyElem4 = soapBodyElem.addChildElement("RETURN_STR-VARCHAR2-OUT", myNamespace);
-		soapBodyElem4.addTextNode("");
-		SOAPElement soapBodyElem5 = soapBodyElem.addChildElement("P_FLIGHT_LIST-FLIGHT_LIST_DATE_OBJ-COUT",
-				myNamespace);
+		soapBodyElem1.addTextNode(ReqDateRange.getAc_owner());
+		SOAPElement soapBodyElem2 = soapBodyElem.addChildElement("P_AF_MODIFIED_SINCE-TIMESTAMP-IN", myNamespace);
+		soapBodyElem2.addTextNode(getAf_date_modified);
+		SOAPElement soapBodyElem3 = soapBodyElem.addChildElement("P_FLIGHT_FROM-TIMESTAMP-IN", myNamespace);
+		soapBodyElem3.addTextNode(getFlight_from_timestamp);
+		SOAPElement soapBodyElem4 = soapBodyElem.addChildElement("P_FLIGHT_TO-TIMESTAMP-IN", myNamespace);
+		soapBodyElem4.addTextNode(getFlight_to_timestamp);
+		SOAPElement soapBodyElem5 = soapBodyElem.addChildElement("RETURN_STR-VARCHAR2-OUT", myNamespace);
 		soapBodyElem5.addTextNode("");
+		SOAPElement soapBodyElem6 = soapBodyElem.addChildElement("P_FLIGHT_LIST-FLIGHT_LIST_DATE_OBJ-COUT",	myNamespace);
+		soapBodyElem6.addTextNode("");
 
 	}
 
 	public static SOAPMessage createSOAPRequest(String contentLength, String ContentType, String soapAction,
-			String authorization) throws Exception {
+			String authorization, ReqDateRange ReqDateRange) throws Exception {
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage soapMessage = messageFactory.createMessage();
 
-		createSoapEnvelope(soapMessage);
+		createSoapEnvelope(soapMessage, ReqDateRange);
 
 		MimeHeaders headers = soapMessage.getMimeHeaders();
 		headers.addHeader("Content-Length", contentLength);
@@ -136,20 +143,21 @@ public class FormatConverter {
 		soapMessage.saveChanges();
 
 		/* Print the request message, just for debugging purposes */
-		// System.out.println("Request SOAP Message:");
-		// soapMessage.writeTo(System.out);
-		// System.out.println("\n");
+		//System.out.println("Request SOAP Message:");
+		//soapMessage.writeTo(System.out);
+		//System.out.println("\n");
 		return soapMessage;
 	}
 
 	public SOAPMessage callSoapWebService(String soapEndpointUrl, String contentLength, String ContentType,
-			String soapAction, String authorization) {
+			String soapAction, String authorization, ReqDateRange ReqDateRange) {
 		try {
 			SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
 			SOAPConnection soapConnection = soapConnectionFactory.createConnection();
 
 			// Send SOAP Message to SOAP Server
-			SOAPMessage soapResponse = soapConnection.call(createSOAPRequest(contentLength, ContentType, soapAction, authorization), soapEndpointUrl);
+			SOAPMessage soapResponse = soapConnection.call(
+					createSOAPRequest(contentLength, ContentType, soapAction, authorization, ReqDateRange), soapEndpointUrl);
 	          
 			// Print the SOAP Response
 			// System.out.println("Response SOAP Message:");

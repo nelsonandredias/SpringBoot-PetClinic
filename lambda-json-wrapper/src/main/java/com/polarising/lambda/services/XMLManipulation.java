@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.polarising.lambda.models.json.FlightItems;
+import com.polarising.lambda.models.FlightItems;
 
 public class XMLManipulation {
 	

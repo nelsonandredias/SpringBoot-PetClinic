@@ -7,13 +7,13 @@ import com.amazonaws.services.lambda.runtime.ClientContext;
 import com.amazonaws.services.lambda.runtime.CognitoIdentity;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
-import com.polarising.lambda.models.json.JSONRequest;
+import com.polarising.lambda.models.ReqDateRange;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
-Context context = new Context() {
+			Context context = new Context() {
 			
 			public int getRemainingTimeInMillis() {
 				// TODO Auto-generated method stub
@@ -71,14 +71,15 @@ Context context = new Context() {
 			}
 		};
 		
-		JSONRequest jsonRequest = new JSONRequest();
+		ReqDateRange jsonRequest = new ReqDateRange();
 		jsonRequest.setAc_owner("TUI");
-		jsonRequest.setFlight_from_timestamp("2021-01-21");
-		jsonRequest.setFlight_to_timestamp("2021-02-26");
+		jsonRequest.setFlight_from_timestamp("2021-01-21T17:45:00");
+		jsonRequest.setFlight_to_timestamp("2021-02-26T17:45:00");
+		jsonRequest.setAf_date_modified("2021-02-26T17:45:00");
 		
-		//ApiWrapperHandler apiWrapperHandler = new ApiWrapperHandler();
+		DateRangeGeneralHandler dateRangeGeneralHandler = new DateRangeGeneralHandler();
 		
-		//apiWrapperHandler.handleRequest(jsonRequest, context);
+		dateRangeGeneralHandler.handleRequest(jsonRequest, context);
 		
 	}
 

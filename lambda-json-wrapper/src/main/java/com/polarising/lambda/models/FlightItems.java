@@ -1,4 +1,4 @@
-package com.polarising.lambda.models.json;
+package com.polarising.lambda.models;
 
 
 

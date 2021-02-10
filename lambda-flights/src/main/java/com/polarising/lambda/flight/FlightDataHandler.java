@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.polarising.lambda.flight.dynamoDB.OperationsDynamoDBImpl;
 import com.polarising.lambda.flight.models.FlightItems;
+import com.polarising.lambda.flight.models.requests.FlightDateRangeRequest;
 
 
 public class FlightDataHandler {
@@ -53,7 +54,7 @@ public class FlightDataHandler {
 		
 		operationsDynamoDB.initDynamoDbClient();
 		
-		 // process event
+		// process event
 	    logger.log("EVENT: " + gson.toJson(inputObjectList));
 	    logger.log("\nEVENT TYPE: " + inputObjectList.getClass().toString());
 		
@@ -82,7 +83,9 @@ public class FlightDataHandler {
 		List<FlightItems> flightListResponse = null;
 		
 		LambdaLogger logger = context.getLogger();
-		
+		 // process event
+	    logger.log("EVENT: " + gson.toJson(input));
+	    logger.log("\nEVENT TYPE: " + input.getClass().toString());
 		System.out.println("Start handling the request 'getAllItemsByFlightDate' ...");
 		
 		operationsDynamoDB.initDynamoDbClient();
@@ -100,6 +103,9 @@ public class FlightDataHandler {
 		List<FlightItems> flightListResponse = null;
 		
 		LambdaLogger logger = context.getLogger();
+		 // process event
+	    logger.log("EVENT: " + gson.toJson(input));
+	    logger.log("\nEVENT TYPE: " + input.getClass().toString());
 		
 		System.out.println("Start handling the request 'getAllItemsByFlightDateAndFlightId' ...");
 		
@@ -113,7 +119,7 @@ public class FlightDataHandler {
 		return flightListResponse;
 	}
 	
-	public List<FlightItems> getAllItemsByFlightDateRange(FlightItems input, Context context) { 
+	public List<FlightItems> getAllItemsByFlightDateRange(FlightDateRangeRequest input, Context context) { 
 
 		List<FlightItems> flightListResponse = null;
 		
@@ -121,9 +127,14 @@ public class FlightDataHandler {
 		
 		System.out.println("Start handling the request 'getAllItemsByFlightDate' ...");
 		
+		// process event
+	    logger.log("EVENT: " + gson.toJson(input));
+	    logger.log("\nEVENT TYPE: " + input.getClass().toString());
+		
 		operationsDynamoDB.initDynamoDbClient();
 		
-		flightListResponse = operationsDynamoDB.getAllItemsByPartitionSortKeyRange("AC_OWNER", "TUI", "#acowner", "AF_DAT", "13-FEB-21", "14-FEB-21");
+		flightListResponse = operationsDynamoDB.getAllItemsByPartitionSortKeyRange(input.getaC_OWNER_Key(),
+				input.getaC_OWNER_Value(), input.getaC_OWNER_Alias(), input.getaF_DAT_Key(), input.getaF_DAT_Min(), input.getaF_DAT_Max());
 		
 		operationsDynamoDB.destroyDynamoDbClient();
 		    
